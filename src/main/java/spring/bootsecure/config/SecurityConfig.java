@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import spring.bootsecure.services.UserService;
 
 @Configuration
@@ -20,6 +21,41 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserService userService;
 
+//    @Bean
+//    public UserDetailsService userDetailsService(){
+//        return new UserService();
+//    }
+//
+//    @Bean
+//    public PasswordEncoder passwordEncoder(){
+//        return new BCryptPasswordEncoder();
+//    }
+//
+//    @Bean
+//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+//
+//        AuthenticationManagerBuilder authenticationManagerBuilder =
+//                http.getSharedObject(AuthenticationManagerBuilder.class);
+//        authenticationManagerBuilder.userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+//
+//        http.exceptionHandling().accessDeniedPage("/forbidden");
+//        http.authorizeRequests().antMatchers("/css/**", "/js/**").permitAll();
+//
+//        http.formLogin()
+//                .loginProcessingUrl("/signin")            //<form action = "/vhod" method = "post">
+//                .usernameParameter("user_email")        //<input type = "text" name = "user_email">
+//                .passwordParameter("user_password")     //<input type = "password" name = "user_password">
+//                .defaultSuccessUrl("/profile")          // response.sendRedirect("/profile")
+//                .failureUrl("/login?loginerror")        // response.sendRedirect("/enter?error");
+//                .loginPage("/login").permitAll();       // /enter
+//
+//        http.logout()
+//                .logoutUrl("/logout")                    //<form action = "/vyhod" method = "post">
+//                .logoutSuccessUrl("/login");            // response.sendRedirect("/enter");
+//
+//        return http.build();
+//    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService);
@@ -27,14 +63,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+
+        http.exceptionHandling().accessDeniedPage("/forbidden");
+
         http.authorizeHttpRequests().antMatchers("/css/**", "/js/**").permitAll();
 
         http.formLogin()
-                .loginProcessingUrl("/auth")                //<form action="/auth" method = "post">
+                .loginProcessingUrl("/signin")               //<form action="/signin" method = "post">
                 .usernameParameter("user_email")            //<input type = "text" name = user_email
                 .passwordParameter("user_password")         //<input type = "password" name = "user_password"
                 .defaultSuccessUrl("/profile")              //return "redirect:/profile"
-                .failureForwardUrl("/login?loginError")     //return "redirect:/login?err"
+                .failureUrl("/login?loginError")            //return "redirect:/login?err"
                 .loginPage("/login").permitAll();           //
 
         http.logout()
