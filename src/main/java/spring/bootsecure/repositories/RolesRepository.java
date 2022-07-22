@@ -9,6 +9,6 @@ import spring.bootsecure.entities.Roles;
 @Transactional
 public interface RolesRepository extends JpaRepository<Roles, Long> {
 
-
+        Roles findByRole(String role);
 
 }
