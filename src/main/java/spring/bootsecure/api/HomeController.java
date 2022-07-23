@@ -59,8 +59,7 @@ public class HomeController {
     private Users getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (!(authentication instanceof AnonymousAuthenticationToken)) {
-            Users user = (Users) authentication.getPrincipal();
-            return user;
+            return (Users) authentication.getPrincipal();
         }
         return null;
     }

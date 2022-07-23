@@ -1,11 +1,25 @@
 <nav class="navbar navbar-expand-sm bg-success navbar-dark">
     <div class="container-fluid ">
         <ul class="navbar-nav mx-auto">
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{'/login'}">LOG IN</a>
-            </li><li class="nav-item">
-                <a class="nav-link" th:href="@{'/register'}">SIGN UP</a>
-            </li>
+            <sec:authorize access="!isAuthenticated()">
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/login'}">LOG IN</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" th:href="@{'/register'}">SIGN UP</a>
+                </li>
+            </sec:authorize>
+            <sec:authorize access="isAuthenticated()">
+                <li class="nav-item">
+                    <form th:action="@{'/logout'}" method="post">
+                        <div class="row">
+                            <div class="col-12 p-3 mt-3 mb-3">
+                                <button class="btn btn-success">SIGN OUT</button>
+                            </div>
+                        </div>
+                    </form>
+                </li>
+            </sec:authorize>
         </ul>
     </div>
 </nav>

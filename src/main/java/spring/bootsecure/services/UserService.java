@@ -1,5 +1,6 @@
 package spring.bootsecure.services;
 
+import groovy.lang.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -44,8 +45,9 @@ public class UserService implements UserDetailsService {
             user.setRoles(roles);
             if (user.getPassword().equals(re_password)){
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
+                userRepository.save(user);
+                return true;
             }
-            return true;
         }
         return false;
     }

@@ -1,5 +1,6 @@
 package spring.bootsecure.config;
 
+import groovy.lang.Lazy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,12 +19,17 @@ import spring.bootsecure.services.UserService;
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(proxyTargetClass = true, prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private UserService userService;
+//    @Autowired
+//    private UserService userService;
+//
+//    @Override
+//    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//        auth.userDetailsService(userService);
+//    }
 
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userService);
+    @Bean
+    public UserDetailsService userDetailsService(){
+        return new UserService();
     }
 
     @Override
