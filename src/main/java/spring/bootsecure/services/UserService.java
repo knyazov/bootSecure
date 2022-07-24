@@ -29,24 +29,38 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = userRepository.findAllByEmail(username);
-        if(user!=null){
+        if (user != null) {
             return user;
-        }else{
+        } else {
             throw new UsernameNotFoundException("USER NOT FOUND");
         }
     }
 
-    public boolean registerUser(Users user, String re_password){
+    public boolean registerUser(Users user, String re_password) {
         Users checkUser = userRepository.findAllByEmail(user.getEmail());
-        if (checkUser == null){
+        if (checkUser == null) {
             Roles userRole = rolesRepository.findByRole("ROLE_STUDENT");
             ArrayList<Roles> roles = new ArrayList<>();
             roles.add(userRole);
             user.setRoles(roles);
-            if (user.getPassword().equals(re_password)){
+            if (user.getPassword().equals(re_password)) {
                 user.setPassword(passwordEncoder.encode(user.getPassword()));
                 userRepository.save(user);
                 return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean changePassword(Users user, String oldPassword, String newPassword, String re_newPassword) {
+        Users checkUser = userRepository.findAllByEmail(user.getEmail());
+        if (checkUser != null) {
+            if (newPassword.equals(re_newPassword)) {
+                if (passwordEncoder.matches(oldPassword, user.getPassword())) {
+                    user.setPassword(passwordEncoder.encode(newPassword));
+                    userRepository.save(user);
+                    return true;
+                }
             }
         }
         return false;

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import spring.bootsecure.entities.Users;
 import spring.bootsecure.services.UserService;
 
+import java.util.Objects;
+
 @Controller
 public class HomeController {
     @Autowired
@@ -62,5 +64,17 @@ public class HomeController {
             return (Users) authentication.getPrincipal();
         }
         return null;
+    }
+
+    @PostMapping(value = "/changePassword")
+    @PreAuthorize("isAuthenticated()")
+    public String changePasswordPage(@RequestParam(name = "oldPassword") String oldPassword,
+                                     @RequestParam(name = "newPassword") String newPassword,
+                                     @RequestParam(name = "re_newPassword") String re_newPassword){
+
+        if (userService.changePassword(getCurrentUser(), oldPassword, newPassword, re_newPassword)){
+            return "redirect:/profile?success";
+        }else
+            return "redirect:/profile?error";
     }
 }
